@@ -22,13 +22,12 @@
 
 #define LED_BUILTIN 25
 const int blueLED = 25;
-const int Led_aja = 15;
+//const int Led_aja = 15;
 const int Led_ini = 13;
+int pinSensorKonveyor = 15;
 
 String readString;
 char nilai = 0;
-
-String message;
 
 /*------Initialize the OLED display using Wire library--------*/
 SSD1306Wire  display(0x3c, OLED_SDA, OLED_SCL); // OLED_SDA=4, OLED_SCL=15
@@ -38,6 +37,8 @@ char Str1[15];
 String rssi = "";
 String packet = "";
 
+String message, terimaBalik;
+  
 void setup() {
 /*---------START aktivas Oled-------*/
   pinMode(LED_BUILTIN, OUTPUT);
@@ -56,8 +57,9 @@ void setup() {
 /*---------aktivasi Oled END---------*/
 
   pinMode(blueLED, OUTPUT);  /*----untuk tes feedback LED-------------*/
-  pinMode(Led_aja, OUTPUT);
+//  pinMode(Led_aja, OUTPUT);
   pinMode(Led_ini, OUTPUT);
+  pinMode(pinSensorKonveyor, INPUT_PULLUP);
 
   
   Serial.begin(115200);
@@ -68,29 +70,37 @@ void setup() {
   Serial.println("LoRa Receiver Callback");
 
   if (!LoRa.begin(BAND)) 
-      {
-        Serial.println("Starting LoRa failed!");
-        while (1);
-      }     
+  {
+    Serial.println("Starting LoRa failed!");
+    while (1);
+  }     
   
   LoRa.onReceive(onReceive);
   LoRa_rxMode();
+
 }
 
 void loop() {
-  
-  message = "002,";    // id
+  message = "001,";    // id
   message += millis()/100;   // kirim data millis,
   message += "#";             // tanda akhir data
   LoRa_sendMessage(message);  // send a message
   
 /*-------------Display Oled--------------------------------*/
   display.setFont(ArialMT_Plain_16);
-  display.drawString(0, 0, "Setiyo_Node_2");
+  display.drawString(0, 0, "Setiyo_Node_1");
   display.setFont(ArialMT_Plain_10);
-  display.drawString(0, 26, "Kirim Data: " + message);
+  display.drawString(0, 26, "Kirim Data    : " + message);
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(0, 36, "Terima Data : " + callbackMessage());
   display.display();
   display.clear();
+
+  if(message == callbackMessage()){
+    digitalWrite(LED_BUILTIN, HIGH);
+  }else{
+    digitalWrite(LED_BUILTIN, LOW);
+  }
   
 }
 
@@ -109,6 +119,7 @@ void LoRa_sendMessage(String message) {
   LoRa.print(message);                  // add payload
   LoRa.endPacket();                     // finish packet and send it
   LoRa_rxMode();                        // set rx mode
+  delay(50);                            // minimal delay(50), untuk transisi menjadi rx mode
 }
  
 void onReceive(int packetSize) {
@@ -118,4 +129,9 @@ void onReceive(int packetSize) {
   }
   Serial.print("Node Receive: ");
   Serial.println(message);
+  terimaBalik = message;
+}
+
+String callbackMessage(){ // Terima data dati gateway
+  return terimaBalik;
 }

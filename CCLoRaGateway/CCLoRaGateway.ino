@@ -31,8 +31,6 @@ int pinSensorKonveyor = 15;
 SSD1306Wire  display(0x3c, OLED_SDA, OLED_SCL); // OLED_SDA=4, OLED_SCL=15
 
 String id, Data, Data1, Data2;
-bool kirimBalik;
-String dataKirimBalik = "";
 
 void setup() {
 /*---------START  Oled ******** ------*/
@@ -87,7 +85,6 @@ void loop() {
   display.display();
   display.clear();
 
-  callbackMessage(kirimBalik, dataKirimBalik);
   
 }
 
@@ -123,11 +120,7 @@ void onReceive(int packetSize) {
  
   id = message.substring(0,len_ID); // parsing id
   Data = message.substring(len_ID+1, len_DT); // parsing data
-//  Serial.println(message);
 
-  dataKirimBalik = message;
-  kirimBalik = true;
-  
   if(id == "001"){
     Data1 = Data;
   }
@@ -141,11 +134,3 @@ void onReceive(int packetSize) {
 //  Serial.print("002, ");
 //  Serial.println(Data2);
 }
-
-void callbackMessage(bool statusKirimBalik, String message){
-  if(statusKirimBalik == true){
-    kirimBalik = false;
-    LoRa_sendMessage(message);
-  }
-}
-

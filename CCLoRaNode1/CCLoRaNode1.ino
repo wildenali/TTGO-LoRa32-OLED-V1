@@ -37,8 +37,8 @@ char Str1[15];
 String rssi = "";
 String packet = "";
 
-String message, terimaBalik;
-  
+String message;
+
 void setup() {
 /*---------START aktivas Oled-------*/
   pinMode(LED_BUILTIN, OUTPUT);
@@ -81,26 +81,20 @@ void setup() {
 }
 
 void loop() {
-  message = "002,";    // id
+  message = "001,";    // id
   message += millis()/100;   // kirim data millis,
   message += "#";             // tanda akhir data
-  LoRa_sendMessage(message);  // send a message
-  
+  LoRa_sendMessage(message);  // send a message  
 /*-------------Display Oled--------------------------------*/
   display.setFont(ArialMT_Plain_16);
-  display.drawString(0, 0, "Setiyo_Node_2");
+  display.drawString(0, 0, "Setiyo_Node_1");
   display.setFont(ArialMT_Plain_10);
   display.drawString(0, 26, "Kirim Data    : " + message);
   display.setFont(ArialMT_Plain_10);
-  display.drawString(0, 36, "Terima Data : " + callbackMessage());
+  display.drawString(0, 36, "Terima Data : 001," + terimaBalik);
   display.display();
   display.clear();
-
-  if(message == callbackMessage()){
-    digitalWrite(LED_BUILTIN, HIGH);
-  }else{
-    digitalWrite(LED_BUILTIN, LOW);
-  }
+ 
   
 }
 
@@ -119,7 +113,6 @@ void LoRa_sendMessage(String message) {
   LoRa.print(message);                  // add payload
   LoRa.endPacket();                     // finish packet and send it
   LoRa_rxMode();                        // set rx mode
-  delay(50);                            // minimal delay(50), untuk transisi menjadi rx mode
 }
  
 void onReceive(int packetSize) {
@@ -130,8 +123,4 @@ void onReceive(int packetSize) {
   Serial.print("Node Receive: ");
   Serial.println(message);
   terimaBalik = message;
-}
-
-String callbackMessage(){ // Terima data dati gateway
-  return terimaBalik;
 }
