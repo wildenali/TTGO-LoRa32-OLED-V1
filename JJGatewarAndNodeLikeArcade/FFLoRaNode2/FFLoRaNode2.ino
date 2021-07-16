@@ -25,16 +25,25 @@ void setup() {
 void loop() {
   while (Serial.available()) {
     String dataInput = Serial.readStringUntil('\n');
+//    Serial.println(dataInput);
+//    LoRa_sendMessage(dataInput);
+    
     LoRa_Message = dataInput;
-    int ind1      = LoRa_Message.indexOf('#');
-    int ind2      = LoRa_Message.indexOf('#', ind1+1 );
-    int ind3      = LoRa_Message.indexOf('#', ind2+1 );
-    GATEWAY_NAME  = LoRa_Message.substring(0, ind1);
-    MACHINE_NAME  = LoRa_Message.substring(ind1+1, ind2);
-    MACHINE_TO    = LoRa_Message.substring(ind2+1, ind3);
-    LoRa_kirimPesanData = LoRa_Message;
+//    int ind1      = LoRa_Message.indexOf('#');
+//    int ind2      = LoRa_Message.indexOf('#', ind1+1 );
+//    int ind3      = LoRa_Message.indexOf('#', ind2+1 );
+//    GATEWAY_NAME  = LoRa_Message.substring(0, ind1);
+//    MACHINE_NAME  = LoRa_Message.substring(ind1+1, ind2);
+//    MACHINE_TO    = LoRa_Message.substring(ind2+1, ind3);
+//    LoRa_kirimPesanData = LoRa_Message;
     LoRa_kirimPesanStatus = true;
-    LoRa_kirimPesan(LoRa_kirimPesanData);
-    LoRa_kirimPesanData = "";
+//    LoRa_kirimPesan(LoRa_kirimPesanData);
+//    LoRa_kirimPesanData = "";
+  }
+  if(LoRa_kirimPesanStatus == true){
+    Serial.println(LoRa_Message);
+    LoRa_sendMessage(LoRa_Message);
+    LoRa_Message = "";
+    LoRa_kirimPesanStatus = false;
   }
 }

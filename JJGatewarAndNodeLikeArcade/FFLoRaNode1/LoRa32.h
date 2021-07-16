@@ -53,19 +53,20 @@ void onReceive(int packetSize) {
   while (LoRa.available()) {
     message += (char)LoRa.read();
   }
-  LoRa_TerimaBalik = message;
-  dataKirimBalik = message;
-
-  int ind1      = message.indexOf('#');
-  String kata1  = message.substring(0, ind1);
-  int ind2      = message.indexOf('#', ind1+1 );
-  String kata2  = message.substring(ind1+1, ind2);
-
-  if(kata1 == GATEWAY_NAME){
-    if(kata2 == MACHINE_NAME){
-      kirimBalik = true;
-    }
-  }
+  Serial.println(message);
+//  LoRa_TerimaBalik = message;
+//  dataKirimBalik = message;
+//
+//  int ind1      = message.indexOf('#');
+//  String kata1  = message.substring(0, ind1);
+//  int ind2      = message.indexOf('#', ind1+1 );
+//  String kata2  = message.substring(ind1+1, ind2);
+//
+//  if(kata1 == GATEWAY_NAME){
+//    if(kata2 == MACHINE_NAME){
+//      kirimBalik = true;
+//    }
+//  }
 }
 
 String LoRa_callbackMessage(){ // Terima data dati gateway

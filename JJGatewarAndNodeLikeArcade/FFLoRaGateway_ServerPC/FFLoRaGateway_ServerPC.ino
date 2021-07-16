@@ -118,9 +118,10 @@ void onReceive(int packetSize) {
   while (LoRa.available()) {
     message += (char)LoRa.read();
   }
+  Serial.println(message);
   
-  dataKirimBalik = message;
-  kirimBalik = true;
+//  dataKirimBalik = message;
+//  kirimBalik = true;
 //  Serial.println(dataKirimBalik);
 }
 
